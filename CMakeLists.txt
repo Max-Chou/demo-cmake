@@ -69,4 +69,21 @@ install(TARGETS path_lib
 
 install(FILES path.hpp
     DESTINATION include
-) 
+)
+
+# Add after the existing test setup
+if(MSVC)
+    target_compile_definitions(path_tests PRIVATE
+        _CRT_SECURE_NO_WARNINGS
+        NOMINMAX
+        WIN32_LEAN_AND_MEAN
+    )
+else()
+    target_link_libraries(path_tests
+        PRIVATE
+        stdc++fs  # For std::filesystem on older gcc versions
+    )
+endif()
+
+# Enable filesystem support
+target_compile_features(path_tests PRIVATE cxx_std_17) 
